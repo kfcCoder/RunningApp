@@ -11,7 +11,7 @@ class MainRepository @Inject constructor(
 
     suspend fun deleteRun(run: Run) = runDao.deleteRun(run)
 
-    /** sort run by every property defined in Run data class*/
+    /** sort run by every property defined in #Run data class*/
     // doesn't need suspend fun here, LiveData works asynchronously by default
     fun getAllRunsSortedByDate() = runDao.getAllRunsSortedByDate()
 
