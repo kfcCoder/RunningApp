@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">RunningAppDemo</string>
+
+    <string name="google_maps_key">AIzaSyDlGDmLXlhkx9x_GYVloaKNUBPNLqknqY4</string>
+
+    <string-array name="spinner_options">
+        <item>Date</item>
+        <item>Running Time</item>
+        <item>Distance</item>
+        <item>Average Speed</item>
+        <item>Calories Burned</item>
+    </string-array>
+</resources>
