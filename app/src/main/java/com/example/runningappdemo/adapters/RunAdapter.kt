@@ -51,7 +51,7 @@ class RunAdapter
                     timeInMillis = run.timeStamp
                 }
                 
-                val dateFormat = SimpleDateFormat("dd, mm, yy", Locale.getDefault())
+                val dateFormat = SimpleDateFormat("dd, MM, yy", Locale.getDefault())
                 tvDate.text = dateFormat.format(calendar.time)
 
                 val avgSpeed = "${run.avgSpeedInKmh} km/h"
