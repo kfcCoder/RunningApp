@@ -15,7 +15,12 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
 
-
+/**
+ * bugs:
+ * 1.start a run and cancel it, then start a new run again, 'FinishRun' will appear
+ * 2.cancel run dialog can't survice config. changes
+ * 3.reload #RunFragment when we already in it
+ */
 @AndroidEntryPoint // annotation to indicate @Inject dependency here
 class MainActivity : AppCompatActivity() {
 
@@ -38,6 +43,8 @@ class MainActivity : AppCompatActivity() {
 
         setSupportActionBar(toolbar)
         bottomNavigationView.setupWithNavController(navController)
+        bottomNavigationView.setOnNavigationItemReselectedListener { /*NO OPERATION*/ } // prevent reload the frag.
+
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when(destination.id) {

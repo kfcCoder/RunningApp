@@ -36,6 +36,8 @@ import java.util.*
 import javax.inject.Inject
 import kotlin.math.round
 
+const val CANCEL_TRACKING_DIALOG_TAG = "CancelDialog"
+
 @AndroidEntryPoint
 class TrackingFragment : Fragment(R.layout.fragment_tracking) {
 
@@ -59,6 +61,13 @@ class TrackingFragment : Fragment(R.layout.fragment_tracking) {
         setHasOptionsMenu(true)
 
         mapView.onCreate(savedInstanceState)
+
+        if (savedInstanceState != null) {
+            val cancelTrackingDialog = parentFragmentManager.findFragmentByTag(
+                    CANCEL_TRACKING_DIALOG_TAG) as CancelTrackingDialog?
+
+            cancelTrackingDialog?.setYesListener { stopRun() }
+        }
 
         mapView.getMapAsync {
             map = it
@@ -135,22 +144,16 @@ class TrackingFragment : Fragment(R.layout.fragment_tracking) {
 
     // show a dialog when current run stopped
     private fun showCancelTrackingDialog() {
-        val dialog = MaterialAlertDialogBuilder(requireContext(), R.style.AlertDialogTheme)
-                .setTitle("Cancel the Run?")
-                .setMessage("Are you sure to cancel the current run and delete all its data?")
-                .setIcon(R.drawable.ic_delete)
-                .setPositiveButton("Yes") { _, _ ->
-                    stopRun()
-                }
-                .setNegativeButton("No") { dialogInterface, _ ->
-                    dialogInterface.cancel()
-                }
-                .create()
-        dialog.show()
+        CancelTrackingDialog().apply {
+            setYesListener {
+                stopRun()
+            }
+        }.show(parentFragmentManager, CANCEL_TRACKING_DIALOG_TAG)
     }
 
     // stop current run and navigate to #RunFragment
     private fun stopRun() {
+        tvTimer.text  = "00:00:00:00"
         sendCommandToService(ACTION_STOP_SERVICE)
         findNavController().navigate(R.id.action_trackingFragment_to_runFragment)
     }
@@ -158,10 +161,10 @@ class TrackingFragment : Fragment(R.layout.fragment_tracking) {
     // observe the data changes from service and update UIs
     private fun updateTrackingUIs(isTracking: Boolean) {
         this.isTracking = isTracking
-        if (!isTracking) {
+        if (!isTracking && curTimeInMillis > 0L) {
             btnToggleRun.text = "Start"
             btnFinishRun.isVisible = true
-        } else {
+        } else if (isTracking){
             btnToggleRun.text = "Stop"
             menu?.getItem(0)?.isVisible = true
             btnFinishRun.isVisible = false
